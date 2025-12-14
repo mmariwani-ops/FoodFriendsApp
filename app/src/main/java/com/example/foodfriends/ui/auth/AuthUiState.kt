@@ -1,0 +1,7 @@
+package com.example.foodfriends.ui.auth
+
+data class AuthUiState(
+    val isLoading: Boolean = false,
+    val isLoggedIn: Boolean = false,
+    val errorMessage: String? = null
+)

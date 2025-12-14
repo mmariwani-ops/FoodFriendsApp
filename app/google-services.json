@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "277672845940",
+    "project_id": "foodfriends-479516",
+    "storage_bucket": "foodfriends-479516.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277672845940:android:66f087c7f4348f92046721",
+        "android_client_info": {
+          "package_name": "com.example.foodfriends"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEN3RcSp-KP7hnqQWkDm5CGObHbFQs9g4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
