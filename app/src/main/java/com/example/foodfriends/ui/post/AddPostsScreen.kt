@@ -8,6 +8,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+private const val SCREEN_PADDING_DP = 16
+private const val LARGE_SPACING_DP = 24
+private const val MEDIUM_SPACING_DP = 12
+
+private const val MIN_RATING = 1
+private const val MAX_RATING = 5
 
 @Composable
 fun AddPostScreen(navController: NavController) {
@@ -21,12 +27,15 @@ fun AddPostScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(SCREEN_PADDING_DP.dp)
     ) {
 
-        Text("Add New Post", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = "Add New Post",
+            style = MaterialTheme.typography.headlineMedium
+        )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(LARGE_SPACING_DP.dp))
 
         // RESTAURANT NAME
         OutlinedTextField(
@@ -36,7 +45,7 @@ fun AddPostScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(MEDIUM_SPACING_DP.dp))
 
         // RATING
         OutlinedTextField(
@@ -53,16 +62,17 @@ fun AddPostScreen(navController: NavController) {
                     ratingInt == null ->
                         "Rating måste vara en siffra"
 
-                    ratingInt < 1 || ratingInt > 5 ->
-                        "Rating måste vara mellan 1 och 5"
+                    ratingInt < MIN_RATING || ratingInt > MAX_RATING ->
+                        "Rating måste vara mellan $MIN_RATING och $MAX_RATING"
 
                     else -> null
                 }
             },
-            label = { Text("Rating (1–5)") },
+            label = { Text("Rating ($MIN_RATING–$MAX_RATING)") },
             isError = ratingError != null,
             modifier = Modifier.fillMaxWidth()
         )
+
         if (ratingError != null) {
             Text(
                 text = ratingError!!,
@@ -71,7 +81,7 @@ fun AddPostScreen(navController: NavController) {
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(MEDIUM_SPACING_DP.dp))
 
         // COMMENT
         OutlinedTextField(
@@ -81,7 +91,7 @@ fun AddPostScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(LARGE_SPACING_DP.dp))
 
         // SUBMIT BUTTON
         Button(

@@ -7,12 +7,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class AuthViewModel : ViewModel() {
-
     private val auth = FirebaseAuth.getInstance()
-
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState = _uiState.asStateFlow()
-
     fun login(email: String, password: String) {
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
 
@@ -75,10 +72,6 @@ class AuthViewModel : ViewModel() {
                     }
             }
     }
-
-
-
-
     fun logout() {
         auth.signOut()
         _uiState.value = AuthUiState()

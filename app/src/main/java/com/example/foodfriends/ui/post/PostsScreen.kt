@@ -10,6 +10,13 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 
+private const val SCREEN_PADDING_DP = 16
+private const val SECTION_SPACING_DP = 16
+private const val LIST_ITEM_SPACING_DP = 12
+private const val CARD_CONTENT_PADDING_DP = 12
+private const val SMALL_SPACING_DP = 8
+private const val FULL_WIDTH_WEIGHT = 1f
+
 @Composable
 fun PostsScreen(
     navController: NavController,
@@ -18,7 +25,7 @@ fun PostsScreen(
 ) {
     val myPosts by viewModel.myPosts.collectAsState()
 
-    // 🔥 FIX: Ladda posts när sidan öppnas
+    // Ladda posts när sidan öppnas
     LaunchedEffect(Unit) {
         viewModel.loadMyPosts()
     }
@@ -26,7 +33,7 @@ fun PostsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(SCREEN_PADDING_DP.dp)
     ) {
 
         Text(
@@ -34,7 +41,7 @@ fun PostsScreen(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(SECTION_SPACING_DP.dp))
 
         Button(
             onClick = { navController.navigate("addPost") },
@@ -43,9 +50,11 @@ fun PostsScreen(
             Text("Add New Post")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(SECTION_SPACING_DP.dp))
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(LIST_ITEM_SPACING_DP.dp)
+        ) {
             items(myPosts) { post ->
 
                 Card(
@@ -54,34 +63,45 @@ fun PostsScreen(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
+                    Column(
+                        modifier = Modifier.padding(CARD_CONTENT_PADDING_DP.dp)
+                    ) {
 
-                        Text(post.restaurantName, style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = post.restaurantName,
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         Text("Rating: ${post.rating}")
                         Text(post.comment)
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(SMALL_SPACING_DP.dp))
 
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(LIST_ITEM_SPACING_DP.dp)
+                        ) {
 
                             // EDIT BUTTON
                             Button(
                                 onClick = {
                                     navController.navigate("editPost/${post.id}")
                                 },
-                                modifier = Modifier.weight(1f)
-                            ) { Text("Edit") }
+                                modifier = Modifier.weight(FULL_WIDTH_WEIGHT)
+                            ) {
+                                Text("Edit")
+                            }
 
                             // DELETE BUTTON
                             Button(
                                 onClick = {
                                     viewModel.deletePost(post.id)
                                 },
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier.weight(FULL_WIDTH_WEIGHT),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.error
                                 )
-                            ) { Text("Delete") }
+                            ) {
+                                Text("Delete")
+                            }
                         }
                     }
                 }
@@ -89,4 +109,3 @@ fun PostsScreen(
         }
     }
 }
-

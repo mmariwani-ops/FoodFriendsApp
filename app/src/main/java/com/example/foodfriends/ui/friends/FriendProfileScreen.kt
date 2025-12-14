@@ -14,6 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.example.foodfriends.data.friends.FirebaseUserProfileRepository
 import kotlinx.coroutines.launch
 
+private const val SCREEN_PADDING_DP = 16
+private const val SECTION_SPACING_DP = 16
+
 @Composable
 fun FriendProfileScreen(friendId: String) {
 
@@ -47,7 +50,7 @@ fun FriendProfileScreen(friendId: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(SCREEN_PADDING_DP.dp)
     ) {
 
         Text(
@@ -55,7 +58,7 @@ fun FriendProfileScreen(friendId: String) {
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(SECTION_SPACING_DP.dp))
 
         when {
             isLoading -> {

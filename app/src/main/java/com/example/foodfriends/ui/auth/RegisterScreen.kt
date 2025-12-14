@@ -7,6 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
+private const val SCREEN_PADDING_DP = 16
+private const val SMALL_SPACING_DP = 12
+private const val LARGE_SPACING_DP = 24
 @Composable
 fun RegisterScreen(
     viewModel: AuthViewModel,                 //  samma VM
@@ -27,10 +30,14 @@ fun RegisterScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(SCREEN_PADDING_DP.dp)
     ) {
-        Text("Create Account", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(24.dp))
+        Text(
+            text = "Create Account",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(Modifier.height(LARGE_SPACING_DP.dp))
 
         OutlinedTextField(
             value = email,
@@ -39,7 +46,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(SMALL_SPACING_DP.dp))
 
         OutlinedTextField(
             value = username,
@@ -48,7 +55,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(SMALL_SPACING_DP.dp))
 
         OutlinedTextField(
             value = password,
@@ -58,7 +65,7 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(LARGE_SPACING_DP.dp))
 
         Button(
             onClick = {
@@ -75,13 +82,16 @@ fun RegisterScreen(
         }
 
         if (uiState.isLoading) {
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(SMALL_SPACING_DP.dp))
             CircularProgressIndicator()
         }
 
         uiState.errorMessage?.let { msg ->
-            Spacer(Modifier.height(12.dp))
-            Text(text = msg, color = MaterialTheme.colorScheme.error)
+            Spacer(Modifier.height(SMALL_SPACING_DP.dp))
+            Text(
+                text = msg,
+                color = MaterialTheme.colorScheme.error
+            )
         }
     }
 }

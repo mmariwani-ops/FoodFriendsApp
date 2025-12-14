@@ -10,6 +10,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.foodfriends.data.model.User
 
+private const val SCREEN_PADDING_DP = 16
+private const val SECTION_SPACING_DP = 16
+private const val SMALL_SPACING_DP = 8
+private const val TINY_SPACING_DP = 6
+private const val ROW_PADDING_DP = 8
+private const val BUTTON_TOP_PADDING_DP = 4
+
 @Composable
 fun FriendsScreen(
     navController: NavController,
@@ -20,7 +27,7 @@ fun FriendsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(SCREEN_PADDING_DP.dp)
     ) {
 
         Text(
@@ -28,7 +35,7 @@ fun FriendsScreen(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(SECTION_SPACING_DP.dp))
 
         // TEXT INPUT
         var emailInput by remember { mutableStateOf("") }
@@ -40,7 +47,7 @@ fun FriendsScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(SMALL_SPACING_DP.dp))
 
         Button(
             onClick = {
@@ -54,7 +61,7 @@ fun FriendsScreen(
             Text("Add Friend")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(SECTION_SPACING_DP.dp))
 
         when {
             state.isLoading -> {
@@ -78,7 +85,7 @@ fun FriendsScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(SMALL_SPACING_DP.dp))
 
                     state.incomingRequests.forEach { user ->
                         IncomingRequestRow(
@@ -86,10 +93,10 @@ fun FriendsScreen(
                             onAccept = { viewModel.acceptFriendRequest(user.id) },
                             onReject = { viewModel.rejectFriendRequest(user.id) }
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(SMALL_SPACING_DP.dp))
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(SECTION_SPACING_DP.dp))
                 }
 
                 state.friends.forEach { user ->
@@ -102,13 +109,12 @@ fun FriendsScreen(
                             viewModel.removeFriend(user.id)
                         }
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(SMALL_SPACING_DP.dp))
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun FriendRow(
@@ -119,7 +125,7 @@ fun FriendRow(
     Column(
         modifier = Modifier
             .clickable { onClick() }
-            .padding(8.dp)
+            .padding(ROW_PADDING_DP.dp)
     ) {
         Text(
             text = user.displayName,
@@ -131,37 +137,40 @@ fun FriendRow(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(TINY_SPACING_DP.dp))
 
         Button(
             onClick = onRemove,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp)
+                .padding(top = BUTTON_TOP_PADDING_DP.dp)
         ) {
             Text("Remove Friend")
         }
     }
 }
+
 @Composable
 fun IncomingRequestRow(
     user: User,
     onAccept: () -> Unit,
     onReject: () -> Unit
 ) {
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column(
+        modifier = Modifier.padding(ROW_PADDING_DP.dp)
+    ) {
 
         Text(
             text = user.displayName,
             style = MaterialTheme.typography.titleMedium
         )
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(TINY_SPACING_DP.dp))
 
         Row {
             Button(
                 onClick = onAccept,
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = SMALL_SPACING_DP.dp)
             ) {
                 Text("Accept")
             }
@@ -172,5 +181,3 @@ fun IncomingRequestRow(
         }
     }
 }
-
-

@@ -1,6 +1,5 @@
 package com.example.foodfriends.data.friends
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -22,7 +21,7 @@ class FirebaseFriendRepository {
     // Ta bort en vän
     suspend fun removeFriend(currentUid: String, friendId: String) {
 
-        // Remove friend from current user's list
+        // Ta bort vän från användarens lista
         firestore.collection("users")
             .document(currentUid)
             .collection("friends")
@@ -30,7 +29,7 @@ class FirebaseFriendRepository {
             .delete()
             .await()
 
-        // ALSO remove current user from friend's list
+        // Samma sak för motparten, att användaren inte är vän
         firestore.collection("users")
             .document(friendId)
             .collection("friends")
@@ -72,7 +71,7 @@ class FirebaseFriendRepository {
     }
     suspend fun acceptFriendRequest(currentUid: String, requesterUid: String) {
 
-        // 1. Lägg till relationen (båda sidor)
+        // Lägg till relationen (båda sidor)
         firestore.collection("users")
             .document(currentUid)
             .collection("friends")
@@ -87,7 +86,7 @@ class FirebaseFriendRepository {
             .set(mapOf("added" to true))
             .await()
 
-        // 2. Ta bort friend request
+        // Ta bort friend request
         firestore.collection("users")
             .document(currentUid)
             .collection("friend_requests")
@@ -98,7 +97,7 @@ class FirebaseFriendRepository {
 
     suspend fun rejectFriendRequest(currentUid: String, requesterUid: String) {
 
-        // Ta bort förfrågan
+        // Ta bort förfrågan (kasta bort)
         firestore.collection("users")
             .document(currentUid)
             .collection("friend_requests")

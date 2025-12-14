@@ -1,6 +1,5 @@
 package com.example.foodfriends.ui.post
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,6 +8,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+
+private const val SCREEN_PADDING_DP = 16
+private const val LARGE_SPACING_DP = 24
+private const val MEDIUM_SPACING_DP = 12
+
+private const val MIN_RATING = 1
+private const val MAX_RATING = 5
 
 @Composable
 fun EditPostScreen(
@@ -32,7 +38,7 @@ fun EditPostScreen(
             rating = it.rating.toString()
             comment = it.comment
 
-            ratingError = null // 👈 STEG 5 – detta är hela grejen
+            ratingError = null // STEG 5 – detta är hela grejen
         }
     }
 
@@ -49,13 +55,17 @@ fun EditPostScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(SCREEN_PADDING_DP.dp)
     ) {
 
-        Text("Edit Post", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Edit Post",
+            style = MaterialTheme.typography.headlineMedium
+        )
 
-        //Restaurant name
+        Spacer(modifier = Modifier.height(LARGE_SPACING_DP.dp))
+
+        // Restaurant name
         OutlinedTextField(
             value = restaurantName,
             onValueChange = { restaurantName = it },
@@ -63,9 +73,9 @@ fun EditPostScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(MEDIUM_SPACING_DP.dp))
 
-        //Rating
+        // Rating
         OutlinedTextField(
             value = rating,
             onValueChange = { newValue ->
@@ -80,16 +90,17 @@ fun EditPostScreen(
                     ratingInt == null ->
                         "Rating måste vara en siffra"
 
-                    ratingInt < 1 || ratingInt > 5 ->
-                        "Rating måste vara mellan 1 och 5"
+                    ratingInt < MIN_RATING || ratingInt > MAX_RATING ->
+                        "Rating måste vara mellan $MIN_RATING och $MAX_RATING"
 
                     else -> null
                 }
             },
-            label = { Text("Rating (1–5)") },
+            label = { Text("Rating ($MIN_RATING–$MAX_RATING)") },
             isError = ratingError != null,
             modifier = Modifier.fillMaxWidth()
         )
+
         if (ratingError != null) {
             Text(
                 text = ratingError!!,
@@ -98,11 +109,9 @@ fun EditPostScreen(
             )
         }
 
+        Spacer(modifier = Modifier.height(MEDIUM_SPACING_DP.dp))
 
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        //Comment
+        // Comment
         OutlinedTextField(
             value = comment,
             onValueChange = { comment = it },
@@ -110,7 +119,7 @@ fun EditPostScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(LARGE_SPACING_DP.dp))
 
         // SAVE BUTTON
         Button(
@@ -132,13 +141,13 @@ fun EditPostScreen(
             Text("Save Changes")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(SCREEN_PADDING_DP.dp))
 
         // DELETE BUTTON
         Button(
             onClick = {
                 viewModel.deletePost(postId) {
-                    navController.popBackStack()   // tillbaka när borttagen
+                    navController.popBackStack()   // tillbaka när man tar bort vän
                 }
             },
             colors = ButtonDefaults.buttonColors(

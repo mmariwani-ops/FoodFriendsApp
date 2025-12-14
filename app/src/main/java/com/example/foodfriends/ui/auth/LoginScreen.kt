@@ -6,6 +6,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+private const val SCREEN_PADDING_DP = 24
+private const val SMALL_SPACING_DP = 12
+private const val MEDIUM_SPACING_DP = 16
+private const val LARGE_SPACING_DP = 24
 
 @Composable
 fun LoginScreen(
@@ -26,7 +30,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(SCREEN_PADDING_DP.dp),
         verticalArrangement = Arrangement.Center
     ) {
         TextField(
@@ -36,7 +40,7 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(MEDIUM_SPACING_DP.dp))
 
         TextField(
             value = password,
@@ -46,7 +50,7 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(LARGE_SPACING_DP.dp))
 
         Button(
             onClick = { viewModel.login(email.trim(), password.trim()) },
@@ -57,14 +61,14 @@ fun LoginScreen(
         }
 
         if (uiState.errorMessage != null) {
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(SMALL_SPACING_DP.dp))
             Text(
                 text = uiState.errorMessage!!,
                 color = MaterialTheme.colorScheme.error
             )
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(MEDIUM_SPACING_DP.dp))
 
         TextButton(onClick = onNavigateToRegister) {
             Text("Create account")

@@ -19,7 +19,6 @@ import com.example.foodfriends.ui.friends.FriendProfileScreen
 import com.example.foodfriends.ui.post.EditPostScreen
 
 
-
 @Composable
 fun AppNavGraph(
     navController: NavHostController,

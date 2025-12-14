@@ -15,7 +15,6 @@ class FriendsViewModel(
 ) : ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
-
     private val _uiState = MutableStateFlow(FriendsUiState())
     val uiState: StateFlow<FriendsUiState> = _uiState
 
@@ -32,7 +31,6 @@ class FriendsViewModel(
             )
             return
         }
-
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
@@ -52,7 +50,6 @@ class FriendsViewModel(
                     incomingRequests = incomingRequests,
                     error = null
                 )
-
             } catch (e: Exception) {
                 _uiState.value = FriendsUiState(
                     isLoading = false,

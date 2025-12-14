@@ -8,7 +8,7 @@ class FirebaseUserProfileRepository {
 
     private val firestore = FirebaseFirestore.getInstance()
 
-    // Hämtar användarprofiler (username + email) baserat på lista med UID:s
+    // Hämtar användarprofiler (username och email) baserat på lista med UID:s
     suspend fun getUsersByIds(ids: List<String>): List<User> {
         val resultList = mutableListOf<User>()
 

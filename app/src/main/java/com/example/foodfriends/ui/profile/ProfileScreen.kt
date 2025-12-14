@@ -10,6 +10,11 @@ import androidx.navigation.NavController
 import com.example.foodfriends.navigation.NavRoutes
 import com.example.foodfriends.ui.auth.AuthViewModel
 
+private const val SCREEN_PADDING_DP = 16
+private const val LARGE_SPACING_DP = 24
+private const val MEDIUM_SPACING_DP = 12
+private const val SMALL_SPACING_DP = 8
+
 @Composable
 fun ProfileScreen(
     navController: NavController,
@@ -23,11 +28,15 @@ fun ProfileScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(SCREEN_PADDING_DP.dp)
     ) {
 
-        Text("My Profile", style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(24.dp))
+        Text(
+            text = "My Profile",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(Modifier.height(LARGE_SPACING_DP.dp))
 
         //  UTLOGGAD -> visa login / register
         if (!authState.isLoggedIn) {
@@ -35,7 +44,8 @@ fun ProfileScreen(
                 text = "You are not logged in",
                 color = MaterialTheme.colorScheme.error
             )
-            Spacer(Modifier.height(12.dp))
+
+            Spacer(Modifier.height(MEDIUM_SPACING_DP.dp))
 
             Button(
                 onClick = { navController.navigate(NavRoutes.Login.route) },
@@ -44,7 +54,7 @@ fun ProfileScreen(
                 Text("Log In")
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(SMALL_SPACING_DP.dp))
 
             OutlinedButton(
                 onClick = { navController.navigate(NavRoutes.Register.route) },
@@ -72,7 +82,7 @@ fun ProfileScreen(
                 Text("Username: ${profileState.username ?: "-"}")
                 Text("Email: ${profileState.email ?: "-"}")
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(LARGE_SPACING_DP.dp))
 
                 Button(
                     onClick = { authViewModel.logout() },

@@ -10,10 +10,7 @@ sealed class NavRoutes(val route: String) {
     data object AddPost : NavRoutes("addPost")
     data object Friends : NavRoutes("friends")
     data object Profile : NavRoutes("profile")
-
-
     data object EditPost : NavRoutes("editPost/{postId}") {
-        fun createRoute(postId: String) = "editPost/$postId"
     }
 
 }

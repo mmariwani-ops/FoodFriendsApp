@@ -6,24 +6,36 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
+private const val COLLECTION_POSTS = "posts"
+private const val FIELD_USER_ID = "userId"
+private const val FIELD_RESTAURANT_NAME = "restaurantName"
+private const val FIELD_RATING = "rating"
+private const val FIELD_COMMENT = "comment"
+private const val FIELD_TIMESTAMP = "timestamp"
+private const val DEFAULT_LONG = 0L
+private const val FIRESTORE_WHERE_IN_LIMIT = 10
+
 class PostRepository(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 ) {
 
-    private val postsRef = firestore.collection("posts")
+    private val postsRef = firestore.collection(COLLECTION_POSTS)
 
     // CREATE POST
-    suspend fun createPost(restaurantName: String, rating: Int, comment: String) {
-
+    suspend fun createPost(
+        restaurantName: String,
+        rating: Int,
+        comment: String
+    ) {
         val uid = auth.currentUser?.uid ?: throw Exception("Not logged in")
 
         val postData = mapOf(
-            "userId" to uid,
-            "restaurantName" to restaurantName,
-            "rating" to rating,
-            "comment" to comment,
-            "timestamp" to System.currentTimeMillis()
+            FIELD_USER_ID to uid,
+            FIELD_RESTAURANT_NAME to restaurantName,
+            FIELD_RATING to rating,
+            FIELD_COMMENT to comment,
+            FIELD_TIMESTAMP to System.currentTimeMillis()
         )
 
         postsRef.add(postData).await()
@@ -34,23 +46,23 @@ class PostRepository(
         val uid = auth.currentUser?.uid ?: return emptyList()
 
         val snapshot = postsRef
-            .whereEqualTo("userId", uid)
-            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .whereEqualTo(FIELD_USER_ID, uid)
+            .orderBy(FIELD_TIMESTAMP, Query.Direction.DESCENDING)
             .get()
             .await()
 
         return snapshot.documents.map { doc ->
             Post(
                 id = doc.id,
-                userId = doc.getString("userId") ?: "",
-                restaurantName = doc.getString("restaurantName") ?: "",
-                rating = (doc.getLong("rating") ?: 0).toInt(),
-                comment = doc.getString("comment") ?: "",
-                timestamp = doc.getLong("timestamp") ?: 0
+                userId = doc.getString(FIELD_USER_ID) ?: "",
+                restaurantName = doc.getString(FIELD_RESTAURANT_NAME) ?: "",
+                rating = (doc.getLong(FIELD_RATING) ?: DEFAULT_LONG).toInt(),
+                comment = doc.getString(FIELD_COMMENT) ?: "",
+                timestamp = doc.getLong(FIELD_TIMESTAMP) ?: DEFAULT_LONG
             )
         }
-
     }
+
     suspend fun updatePost(
         postId: String,
         restaurantName: String,
@@ -60,10 +72,10 @@ class PostRepository(
         postsRef.document(postId)
             .update(
                 mapOf(
-                    "restaurantName" to restaurantName,
-                    "rating" to rating,
-                    "comment" to comment,
-                    "timestamp" to System.currentTimeMillis()
+                    FIELD_RESTAURANT_NAME to restaurantName,
+                    FIELD_RATING to rating,
+                    FIELD_COMMENT to comment,
+                    FIELD_TIMESTAMP to System.currentTimeMillis()
                 )
             )
             .await()
@@ -83,64 +95,43 @@ class PostRepository(
 
         return Post(
             id = doc.id,
-            userId = doc.getString("userId") ?: "",
-            restaurantName = doc.getString("restaurantName") ?: "",
-            rating = (doc.getLong("rating") ?: 0).toInt(),
-            comment = doc.getString("comment") ?: "",
-            timestamp = doc.getLong("timestamp") ?: 0
+            userId = doc.getString(FIELD_USER_ID) ?: "",
+            restaurantName = doc.getString(FIELD_RESTAURANT_NAME) ?: "",
+            rating = (doc.getLong(FIELD_RATING) ?: DEFAULT_LONG).toInt(),
+            comment = doc.getString(FIELD_COMMENT) ?: "",
+            timestamp = doc.getLong(FIELD_TIMESTAMP) ?: DEFAULT_LONG
         )
     }
-    suspend fun getFriendsPosts(friendIds: List<String>): List<Post> {
-        if (friendIds.isEmpty()) return emptyList()
 
-        val snapshot = postsRef
-            .whereIn("userId", friendIds.take(10)) // Firestore limit
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .get()
-            .await()
-
-        return snapshot.documents.map { doc ->
-            Post(
-                id = doc.id,
-                userId = doc.getString("userId") ?: "",
-                restaurantName = doc.getString("restaurantName") ?: "",
-                rating = (doc.getLong("rating") ?: 0).toInt(),
-                comment = doc.getString("comment") ?: "",
-                timestamp = doc.getLong("timestamp") ?: 0
-            )
-        }
-    }
     suspend fun getPostsForUsers(userIds: List<String>): List<Post> {
         if (userIds.isEmpty()) return emptyList()
 
-        val chunks = userIds.chunked(10) // Firestore whereIn max 10
+        val chunks = userIds.chunked(FIRESTORE_WHERE_IN_LIMIT)
         val allDocs = mutableListOf<com.google.firebase.firestore.DocumentSnapshot>()
 
         for (chunk in chunks) {
             val snap = postsRef
-                .whereIn("userId", chunk)
-                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .whereIn(FIELD_USER_ID, chunk)
+                .orderBy(FIELD_TIMESTAMP, Query.Direction.DESCENDING)
                 .get()
                 .await()
 
             allDocs.addAll(snap.documents)
         }
 
-        // ta bort dubletter om en post råkar komma med flera gånger
         val unique = allDocs.distinctBy { it.id }
-
-        return unique.map { doc ->
-            Post(
-                id = doc.id,
-                userId = doc.getString("userId") ?: "",
-                restaurantName = doc.getString("restaurantName") ?: "",
-                rating = (doc.getLong("rating") ?: 0).toInt(),
-                comment = doc.getString("comment") ?: "",
-                timestamp = doc.getLong("timestamp") ?: 0L
-            )
-        }.sortedByDescending { it.timestamp }
+        //
+        return unique
+            .map { doc ->
+                Post(
+                    id = doc.id,
+                    userId = doc.getString(FIELD_USER_ID) ?: "",
+                    restaurantName = doc.getString(FIELD_RESTAURANT_NAME) ?: "",
+                    rating = (doc.getLong(FIELD_RATING) ?: DEFAULT_LONG).toInt(),
+                    comment = doc.getString(FIELD_COMMENT) ?: "",
+                    timestamp = doc.getLong(FIELD_TIMESTAMP) ?: DEFAULT_LONG
+                )
+            }
+            .sortedByDescending { it.timestamp }
     }
-
-
-
 }
